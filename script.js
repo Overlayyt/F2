@@ -207,3 +207,70 @@ function takeSnapshot() {
   link.click();
   document.body.removeChild(link);
 }
+// Modified takeSnapshot function
+function takeSnapshot() {
+  const snapshotCanvas = document.createElement('canvas');
+  const ctx = snapshotCanvas.getContext('2d');
+
+  snapshotCanvas.width = videoElement.videoWidth;
+  snapshotCanvas.height = videoElement.videoHeight;
+
+  // Draw video frame
+  ctx.drawImage(videoElement, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+
+  // Overlay jewelry if selected
+  if (currentMode === 'earring' && earringImg) {
+    const leftSmooth = smooth(leftEarPositions);
+    const rightSmooth = smooth(rightEarPositions);
+    if (leftSmooth) ctx.drawImage(earringImg, leftSmooth.x - 60, leftSmooth.y, 100, 100);
+    if (rightSmooth) ctx.drawImage(earringImg, rightSmooth.x - 20, rightSmooth.y, 100, 100);
+  }
+
+  if (currentMode === 'necklace' && necklaceImg) {
+    const chinSmooth = smooth(chinPositions);
+    if (chinSmooth) ctx.drawImage(necklaceImg, chinSmooth.x - 100, chinSmooth.y, 200, 100);
+  }
+
+  // Show preview instead of auto-download
+  showPreview(snapshotCanvas);
+}
+
+// Show the preview modal
+function showPreview(canvas) {
+  const previewModal = document.getElementById('snapshot-preview');
+  const previewImg = document.getElementById('preview-image');
+  
+  // Convert canvas to image and display
+  previewImg.src = canvas.toDataURL('image/png');
+  previewModal.style.display = 'block';
+  previewModal.classList.remove('hidden');
+}
+
+// Close preview
+function closePreview() {
+  const previewModal = document.getElementById('snapshot-preview');
+  previewModal.style.display = 'none';
+  previewModal.classList.add('hidden');
+}
+
+// Save snapshot (original download functionality)
+function saveSnapshot() {
+  const previewImg = document.getElementById('preview-image');
+  const link = document.createElement('a');
+  link.href = previewImg.src;
+  link.download = `jewelry-tryon-${Date.now()}.png`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  closePreview();
+}
+
+// Share snapshot
+function shareSnapshot() {
+  const previewImg = document.getElementById('preview-image');
+  
+  if (navigator.share) {
+    navigator.share({
+      title: 'My Jewelry Look',
+      text: 'Check out this virtual try-on!',
+      url:

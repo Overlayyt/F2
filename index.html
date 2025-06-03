@@ -43,5 +43,20 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
   <script src="script.js"></script>
+  <div id="snapshot-preview" class="preview-modal hidden">
+  <div class="preview-header">
+    <h3>Your Look</h3>
+    <button class="close-preview" onclick="closePreview()">×</button>
+  </div>
+  <img id="preview-image" src="" alt="Snapshot Preview" />
+  <div class="preview-actions">
+    <button onclick="saveSnapshot()" class="save-btn">
+      <img src="save-icon.png" alt="Save" /> Save
+    </button>
+    <button onclick="shareSnapshot()" class="share-btn">
+      <img src="share-icon.png" alt="Share" /> Share
+    </button>
+  </div>
+</div>
 </body>
 </html>
